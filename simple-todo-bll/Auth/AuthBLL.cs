@@ -44,9 +44,24 @@ namespace simple_todo_bll.Auth
             }
         }
 
-        public Task<UserDto> Login(LoginUserDto user)
+        public async Task<UserDto> Login(LoginUserDto user)
         {
-            throw new NotImplementedException();
+            using (var unitOfWork = new UnitOfWork(_context))
+            {
+                var userExists = await unitOfWork.UserRepository.Get(u => u.Email == user.Email);
+                if (userExists.Count == 0)
+                {
+                    throw new Exception("User not found");
+                }
+                var userEntity = userExists[0];
+                if (!PasswordUtils.VerifyPassword(user.Password, userEntity.PasswordHash, PasswordUtils.ConvertStringToSalt(userEntity.Salt)))
+                {
+                    throw new Exception("Invalid password");
+                }
+                var result = AuthMappers.ToUserDto(userEntity);
+                result.Token = TokenUtils.GenerateToken(result, _config);
+                return result;
+            }
         }
     }
 }

@@ -1,8 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using simple_todo_bll.Auth;
 using simple_todo_bll.Auth.DTOs;
-using simple_todo_bll.Todo;
-using simple_todo_bll.Todo.DTOs;
 using simple_todo_database.Entities;
 
 namespace simple_todo_api.Controllers;
@@ -24,8 +22,14 @@ public class AuthController : ControllerBase
     [HttpPost("register")]
     public async Task<ActionResult<List<Todo>>> Register([FromBody] CreateUserDto user)
     {
+        var newUser = await _authBLL.CreateUser(user);
+        return Ok(newUser);
+    }
 
-        var todos = await _authBLL.CreateUser(user);
-        return Ok(todos);
+    [HttpPost("login")]
+    public async Task<ActionResult<List<Todo>>> Login([FromBody] LoginUserDto user)
+    {
+        var loggedUser = await _authBLL.Login(user);
+        return Ok(loggedUser);
     }
 }

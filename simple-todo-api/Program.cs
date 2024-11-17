@@ -19,6 +19,9 @@ builder.Services.AddOpenApi();
 builder.Services.AddDbContext<ApiDbContext>(options =>
         options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("simple-todo-database")));
 
+
+builder.Services.AddHttpContextAccessor();
+
 builder.Services.AddMvc();
 
 builder.Services.AddScoped<ITodoBLL, TodoBLL>();
