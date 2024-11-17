@@ -18,6 +18,9 @@ builder.Services.AddMvc();
 
 builder.Services.AddScoped<ITodoBLL, TodoBLL>();
 
+builder.Services.AddRouting(options => options.LowercaseUrls = true);
+
+
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Simple Todo API", Version = "v1" });

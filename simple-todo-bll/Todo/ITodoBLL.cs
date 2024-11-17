@@ -6,8 +6,8 @@ namespace simple_todo_bll.Todo
     {
         public Task<List<TodoDto>> GetTodos();
         public Task<TodoDto> GetTodoById(string id);
-        public Task<TodoDto> CreateTodo(TodoDto todo);
-        public Task<TodoDto> UpdateTodoById(string id, TodoDto todo);
+        public Task<TodoDto> CreateTodo(CreateTodoDto todo);
+        public Task<TodoDto> UpdateTodoById(string id, UpdateTodoDto todo);
         public void DeleteTodoById(string id);
     }
 }

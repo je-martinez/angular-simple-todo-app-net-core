@@ -35,12 +35,12 @@ namespace simple_todo_bll.Todo
             }
         }
 
-        public async Task<TodoDto> CreateTodo(TodoDto todo)
+        public async Task<TodoDto> CreateTodo(CreateTodoDto todo)
         {
             using (var unitOfWork = new UnitOfWork(_context))
             {
                 var newEntity = TodoMappers.ToTodoEntity(todo);
-                newEntity.CreatedAt = DateTime.Now;
+                newEntity.CreatedAt = DateTime.Now.ToUniversalTime();
                 newEntity.CreatedBy = "System";
                 var newTodo = await unitOfWork.TodoRepository.Insert(newEntity);
                 await unitOfWork.Save();
@@ -48,7 +48,7 @@ namespace simple_todo_bll.Todo
             }
         }
 
-        public async Task<TodoDto> UpdateTodoById(string id, TodoDto todo)
+        public async Task<TodoDto> UpdateTodoById(string id, UpdateTodoDto todo)
         {
             using (var unitOfWork = new UnitOfWork(_context))
             {
@@ -60,7 +60,11 @@ namespace simple_todo_bll.Todo
                 entityToUpdate.Name = todo.Name;
                 entityToUpdate.Description = todo.Description;
                 entityToUpdate.IsComplete = todo.IsComplete;
-                entityToUpdate.UpdatedAt = DateTime.Now;
+                if (todo.IsComplete)
+                {
+                    entityToUpdate.CompletedAt = DateTime.Now.ToUniversalTime();
+                }
+                entityToUpdate.UpdatedAt = DateTime.Now.ToUniversalTime();
                 entityToUpdate.UpdatedBy = "System";
                 unitOfWork.TodoRepository.Update(entityToUpdate);
                 await unitOfWork.Save();
@@ -72,6 +76,7 @@ namespace simple_todo_bll.Todo
         {
             using (var unitOfWork = new UnitOfWork(_context))
             {
+
                 var entityToDelete = await unitOfWork.TodoRepository.GetByID(id);
                 if (entityToDelete == null)
                 {
