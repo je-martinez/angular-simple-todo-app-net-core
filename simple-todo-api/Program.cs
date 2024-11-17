@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using simple_todo_bll.Auth;
+using simple_todo_bll.Auth.DTOs;
 using simple_todo_bll.Todo;
 using simple_todo_database.Context;
 
@@ -21,8 +23,14 @@ builder.Services.AddMvc();
 
 builder.Services.AddScoped<ITodoBLL, TodoBLL>();
 
-builder.Services.AddRouting(options => options.LowercaseUrls = true);
+builder.Services.AddScoped<IAuthBLL, AuthBLL>(provider => new AuthBLL(provider.GetRequiredService<ApiDbContext>(), new JwtConfigDto
+{
+    Secret = builder.Configuration["Jwt:Key"],
+    Issuer = builder.Configuration["Jwt:Issuer"]
+}));
 
+
+builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
 builder.Services.AddSwaggerGen(c =>
 {

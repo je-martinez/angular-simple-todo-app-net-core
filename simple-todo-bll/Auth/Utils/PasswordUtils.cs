@@ -19,6 +19,16 @@ namespace simple_todo_bll.Auth.Utils
             return salt;
         }
 
+        public static string ConvertSaltToString(byte[] salt)
+        {
+            return Convert.ToBase64String(salt);
+        }
+
+        public static byte[] ConvertStringToSalt(string salt)
+        {
+            return Convert.FromBase64String(salt);
+        }
+
         public static string HashPassword(string password, byte[] salt)
         {
             var hash = Rfc2898DeriveBytes.Pbkdf2(

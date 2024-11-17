@@ -7,6 +7,7 @@ namespace simple_todo_dal
     {
         private readonly ApiDbContext _context;
         private GenericRepository<Todo> _todoRepository;
+        private GenericRepository<User> _userRepository;
 
         public UnitOfWork(ApiDbContext context)
         {
@@ -23,6 +24,34 @@ namespace simple_todo_dal
                 }
                 return _todoRepository;
             }
+        }
+
+        public GenericRepository<User> UserRepository
+        {
+            get
+            {
+                if (_userRepository == null)
+                {
+                    _userRepository = new GenericRepository<User>(_context);
+                }
+                return _userRepository;
+            }
+        }
+
+
+        public void BeginTransaction()
+        {
+            _context.Database.BeginTransactionAsync();
+        }
+
+        public void CommitTransaction()
+        {
+            _context.Database.CommitTransactionAsync();
+        }
+
+        public void RollbackTransaction()
+        {
+            _context.Database.RollbackTransactionAsync();
         }
 
         public async Task<int> Save()
