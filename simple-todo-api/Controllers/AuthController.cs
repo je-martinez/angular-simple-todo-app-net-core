@@ -12,7 +12,6 @@ public class AuthController : ControllerBase
     private readonly ILogger<AuthController> _logger;
     private readonly IAuthBLL _authBLL;
 
-
     public AuthController(ILogger<AuthController> logger, IAuthBLL todoBLL)
     {
         _logger = logger;

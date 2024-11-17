@@ -26,7 +26,9 @@ builder.Services.AddMvc();
 
 builder.Services.AddScoped<ITodoBLL, TodoBLL>();
 
-builder.Services.AddScoped<IAuthBLL, AuthBLL>(provider => new AuthBLL(provider.GetRequiredService<ApiDbContext>(), new JwtConfigDto
+builder.Services.AddScoped<IAuthBLL, AuthBLL>(provider =>
+new AuthBLL(provider.GetRequiredService<ApiDbContext>(),
+new JwtConfigDto
 {
     Secret = builder.Configuration["Jwt:Key"],
     Issuer = builder.Configuration["Jwt:Issuer"]

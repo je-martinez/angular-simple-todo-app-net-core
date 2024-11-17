@@ -2,6 +2,9 @@ using simple_todo_bll.Todo.DTOs;
 using simple_todo_bll.Todo.Mappers;
 using simple_todo_dal;
 using simple_todo_database.Context;
+using Microsoft.AspNetCore.Http;
+using simple_todo_bll.Auth.DTOs;
+using simple_todo_bll.Auth.Utils;
 
 namespace simple_todo_bll.Todo
 {
@@ -9,10 +12,14 @@ namespace simple_todo_bll.Todo
     {
 
         private readonly ApiDbContext _context;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly UserDto loggedUser;
 
-        public TodoBLL(ApiDbContext context)
+        public TodoBLL(ApiDbContext context, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
+            _httpContextAccessor = httpContextAccessor;
+            loggedUser = UserUtils.ExtractUserFromRequest(_httpContextAccessor.HttpContext.User);
         }
 
         public async Task<List<TodoDto>> GetTodos()
@@ -41,7 +48,7 @@ namespace simple_todo_bll.Todo
             {
                 var newEntity = TodoMappers.ToTodoEntity(todo);
                 newEntity.CreatedAt = DateTime.Now.ToUniversalTime();
-                newEntity.CreatedBy = "System";
+                newEntity.CreatedBy = loggedUser.Email;
                 var newTodo = await unitOfWork.TodoRepository.Insert(newEntity);
                 await unitOfWork.Save();
                 return TodoMappers.ToTodoDto(newTodo);
@@ -65,7 +72,7 @@ namespace simple_todo_bll.Todo
                     entityToUpdate.CompletedAt = DateTime.Now.ToUniversalTime();
                 }
                 entityToUpdate.UpdatedAt = DateTime.Now.ToUniversalTime();
-                entityToUpdate.UpdatedBy = "System";
+                entityToUpdate.UpdatedBy = loggedUser.Email;
                 unitOfWork.TodoRepository.Update(entityToUpdate);
                 await unitOfWork.Save();
                 return TodoMappers.ToTodoDto(entityToUpdate);
