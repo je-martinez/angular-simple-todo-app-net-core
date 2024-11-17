@@ -30,8 +30,8 @@ builder.Services.AddScoped<IAuthBLL, AuthBLL>(provider =>
 new AuthBLL(provider.GetRequiredService<ApiDbContext>(),
 new JwtConfigDto
 {
-    Secret = builder.Configuration["Jwt:Key"],
-    Issuer = builder.Configuration["Jwt:Issuer"]
+    Secret = builder.Configuration["Jwt:Key"] ?? string.Empty,
+    Issuer = builder.Configuration["Jwt:Issuer"] ?? string.Empty
 }));
 
 
@@ -79,7 +79,7 @@ builder.Services.AddAuthentication(options =>
         ValidateIssuerSigningKey = true,
         ValidIssuer = builder.Configuration["Jwt:Issuer"],
         ValidAudience = builder.Configuration["Jwt:Issuer"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"] ?? throw new InvalidOperationException("JWT Key is not configured")))
     };
 });
 

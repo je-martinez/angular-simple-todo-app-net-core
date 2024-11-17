@@ -27,6 +27,7 @@ namespace simple_todo_bll.Auth.Utils
                 Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
                 Issuer = config.Issuer,
+                Audience = config.Issuer,
                 IssuedAt = DateTime.UtcNow,
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);

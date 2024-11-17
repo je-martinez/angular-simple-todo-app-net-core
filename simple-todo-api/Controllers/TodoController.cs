@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using simple_todo_bll.Todo;
 using simple_todo_bll.Todo.DTOs;
@@ -6,6 +7,7 @@ using simple_todo_database.Entities;
 namespace simple_todo_api.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("[controller]")]
 public class TodoController : ControllerBase
 {
