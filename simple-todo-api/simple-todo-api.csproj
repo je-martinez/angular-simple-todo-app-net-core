@@ -19,6 +19,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\simple-todo-database\simple-todo-database.csproj" />
+    <ProjectReference Include="..\simple-todo-dal\simple-todo-dal.csproj" />
+    <ProjectReference Include="..\simple-todo-bll\simple-todo-bll.csproj" />
   </ItemGroup>
 
 </Project>

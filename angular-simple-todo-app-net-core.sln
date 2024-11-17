@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "simple-todo-database", "sim
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "simple-todo-dal", "simple-todo-dal\simple-todo-dal.csproj", "{8750E66B-ADEB-409F-AB7A-980D567E2159}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "simple-todo-bll", "simple-todo-bll\simple-todo-bll.csproj", "{B8E80F5F-AFA1-4BC0-B4EF-33C0F566ABB8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{8750E66B-ADEB-409F-AB7A-980D567E2159}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8750E66B-ADEB-409F-AB7A-980D567E2159}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8750E66B-ADEB-409F-AB7A-980D567E2159}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8E80F5F-AFA1-4BC0-B4EF-33C0F566ABB8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8E80F5F-AFA1-4BC0-B4EF-33C0F566ABB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8E80F5F-AFA1-4BC0-B4EF-33C0F566ABB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8E80F5F-AFA1-4BC0-B4EF-33C0F566ABB8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
