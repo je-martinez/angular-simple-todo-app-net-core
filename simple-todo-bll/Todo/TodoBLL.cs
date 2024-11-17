@@ -8,17 +8,17 @@ namespace simple_todo_bll.Todo
     public class TodoBLL : ITodoBLL
     {
 
-        private readonly ApiDbContext context;
+        private readonly ApiDbContext _context;
 
         public TodoBLL(ApiDbContext context)
         {
-            this.context = context;
+            _context = context;
         }
 
         public async Task<List<TodoDto>> GetTodos()
         {
 
-            using (var unitOfWork = new UnitOfWork(this.context))
+            using (var unitOfWork = new UnitOfWork(_context))
             {
                 var todos = await unitOfWork.TodoRepository.Get();
                 return todos.Select(todo => TodoMappers.ToTodoDto(todo)).ToList();
@@ -28,7 +28,7 @@ namespace simple_todo_bll.Todo
 
         public async Task<TodoDto> GetTodoById(string id)
         {
-            using (var unitOfWork = new UnitOfWork(this.context))
+            using (var unitOfWork = new UnitOfWork(_context))
             {
                 var todo = await unitOfWork.TodoRepository.GetByID(id);
                 return TodoMappers.ToTodoDto(todo);
@@ -37,7 +37,7 @@ namespace simple_todo_bll.Todo
 
         public async Task<TodoDto> CreateTodo(TodoDto todo)
         {
-            using (var unitOfWork = new UnitOfWork(this.context))
+            using (var unitOfWork = new UnitOfWork(_context))
             {
                 var newEntity = TodoMappers.ToTodoEntity(todo);
                 newEntity.CreatedAt = DateTime.Now;
@@ -50,7 +50,7 @@ namespace simple_todo_bll.Todo
 
         public async Task<TodoDto> UpdateTodoById(string id, TodoDto todo)
         {
-            using (var unitOfWork = new UnitOfWork(this.context))
+            using (var unitOfWork = new UnitOfWork(_context))
             {
                 var entityToUpdate = await unitOfWork.TodoRepository.GetByID(id);
                 if (entityToUpdate == null)
@@ -70,7 +70,7 @@ namespace simple_todo_bll.Todo
 
         public async void DeleteTodoById(string id)
         {
-            using (var unitOfWork = new UnitOfWork(this.context))
+            using (var unitOfWork = new UnitOfWork(_context))
             {
                 var entityToDelete = await unitOfWork.TodoRepository.GetByID(id);
                 if (entityToDelete == null)

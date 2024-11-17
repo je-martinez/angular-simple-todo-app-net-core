@@ -1,6 +1,6 @@
 using simple_todo_bll.Todo.DTOs;
 
-namespace simple_todo_bll
+namespace simple_todo_bll.Todo
 {
     public interface ITodoBLL
     {
