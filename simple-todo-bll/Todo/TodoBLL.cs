@@ -60,7 +60,7 @@ namespace simple_todo_bll.Todo
                 entityToUpdate.Name = todo.Name;
                 entityToUpdate.Description = todo.Description;
                 entityToUpdate.IsComplete = todo.IsComplete;
-                if (todo.IsComplete)
+                if (todo.IsComplete && entityToUpdate.CompletedAt == null)
                 {
                     entityToUpdate.CompletedAt = DateTime.Now.ToUniversalTime();
                 }
@@ -72,7 +72,7 @@ namespace simple_todo_bll.Todo
             }
         }
 
-        public async void DeleteTodoById(string id)
+        public async Task<bool> DeleteTodoById(string id)
         {
             using (var unitOfWork = new UnitOfWork(_context))
             {
@@ -80,10 +80,11 @@ namespace simple_todo_bll.Todo
                 var entityToDelete = await unitOfWork.TodoRepository.GetByID(id);
                 if (entityToDelete == null)
                 {
-                    return;
+                    return false;
                 }
                 unitOfWork.TodoRepository.Delete(entityToDelete);
                 await unitOfWork.Save();
+                return true;
             }
         }
     }
