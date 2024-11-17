@@ -19,6 +19,7 @@ namespace simple_todo_database.Entities
         public string? UpdatedBy { get; set; }
         public DateTime? DeletedAt { get; set; }
         public string? DeletedBy { get; set; }
+        [DefaultValue(true)]
         public bool Status { get; set; } = true;
     }
 }
