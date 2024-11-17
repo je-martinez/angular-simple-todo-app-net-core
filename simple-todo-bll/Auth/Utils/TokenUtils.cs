@@ -17,7 +17,7 @@ namespace simple_todo_bll.Auth.Utils
             var claims = new ClaimsIdentity(new[] {
                  new Claim("id", user.Id),
                  new Claim("name", user.Name),
-                 new Claim("email", user.Email),
+                 new Claim("e-mail", user.Email),
                  new Claim("status", user.Status.ToString())
             });
 

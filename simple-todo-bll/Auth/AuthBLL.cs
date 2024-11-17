@@ -54,7 +54,10 @@ namespace simple_todo_bll.Auth
                     throw new Exception("User not found");
                 }
                 var userEntity = userExists[0];
-                if (!PasswordUtils.VerifyPassword(user.Password, userEntity.PasswordHash, PasswordUtils.ConvertStringToSalt(userEntity.Salt)))
+                if (!PasswordUtils.VerifyPassword(
+                    user.Password,
+                    userEntity.PasswordHash,
+                    PasswordUtils.ConvertStringToSalt(userEntity.Salt)))
                 {
                     throw new Exception("Invalid password");
                 }
