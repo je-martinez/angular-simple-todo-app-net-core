@@ -12,7 +12,6 @@ namespace simple_todo_database.Entities
         [DefaultValue(false)]
         public bool IsComplete { get; set; }
         public DateTime? CompletedAt { get; set; }
-
         public DateTime CreatedAt { get; set; }
         public string CreatedBy { get; set; }
         public DateTime? UpdatedAt { get; set; }

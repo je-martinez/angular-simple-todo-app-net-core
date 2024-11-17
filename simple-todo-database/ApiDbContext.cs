@@ -9,5 +9,6 @@ namespace simple_todo_database.Context
         public ApiDbContext(DbContextOptions<ApiDbContext> options) : base(options) { }
 
         public DbSet<Todo> Todos { get; set; }
+        public DbSet<User> Users { get; set; }
     }
 }
