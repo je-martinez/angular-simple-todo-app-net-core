@@ -1,8 +1,8 @@
 
 using Microsoft.EntityFrameworkCore;
-using simple_todo_api.Entities;
+using simple_todo_database.Entities;
 
-namespace simple_todo_api.Data
+namespace simple_todo_database.Context
 {
     public class ApiDbContext : DbContext
     {
@@ -10,6 +10,4 @@ namespace simple_todo_api.Data
 
         public DbSet<Todo> Todos { get; set; }
     }
-
-
 }

@@ -2,21 +2,18 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using simple_todo_api.Data;
+using simple_todo_database.Context;
 
 #nullable disable
 
-namespace simple_todo_api.Migrations
+namespace simple_todo_database.Migrations
 {
     [DbContext(typeof(ApiDbContext))]
-    [Migration("20241117021631_InitialCreate")]
-    partial class InitialCreate
+    partial class ApiDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -25,7 +22,7 @@ namespace simple_todo_api.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("simple_todo_api.Entities.Todo", b =>
+            modelBuilder.Entity("simple_todo_database.Entities.Todo", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text");

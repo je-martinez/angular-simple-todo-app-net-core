@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace simple_todo_api.Entities
+namespace simple_todo_database.Entities
 {
     public class Todo
     {
