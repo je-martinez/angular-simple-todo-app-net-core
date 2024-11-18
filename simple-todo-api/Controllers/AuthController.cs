@@ -19,16 +19,11 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("register")]
-    public async Task<ActionResult<List<Todo>>> Register([FromBody] CreateUserDto user)
-    {
-        var newUser = await _authBLL.CreateUser(user);
-        return Ok(newUser);
-    }
+    public async Task<ActionResult<UserDto>> Register([FromBody] CreateUserDto user)
+        => await _authBLL.CreateUser(user);
 
     [HttpPost("login")]
-    public async Task<ActionResult<List<Todo>>> Login([FromBody] LoginUserDto user)
-    {
-        var loggedUser = await _authBLL.Login(user);
-        return Ok(loggedUser);
-    }
+    public async Task<ActionResult<UserDto>> Login([FromBody] LoginUserDto user)
+        => await _authBLL.Login(user);
+
 }

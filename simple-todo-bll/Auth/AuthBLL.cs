@@ -1,6 +1,8 @@
+using Microsoft.AspNetCore.Mvc;
 using simple_todo_bll.Auth.DTOs;
 using simple_todo_bll.Auth.Mappers;
 using simple_todo_bll.Auth.Utils;
+using simple_todo_bll.Shared.Utils;
 using simple_todo_dal;
 using simple_todo_database.Context;
 using simple_todo_database.Entities;
@@ -18,7 +20,7 @@ namespace simple_todo_bll.Auth
             _config = config;
         }
 
-        public async Task<UserDto> CreateUser(CreateUserDto user)
+        public async Task<IActionResult> CreateUser(CreateUserDto user)
         {
             using (var unitOfWork = new UnitOfWork(_context))
             {
@@ -26,7 +28,7 @@ namespace simple_todo_bll.Auth
                 var userExists = await unitOfWork.UserRepository.Get(u => u.Email == user.Email);
                 if (userExists.Count > 0)
                 {
-                    throw new Exception("User already exists");
+                    return new ConflictObjectResult("User already exists");
                 }
                 var hash = PasswordUtils.generateSalt();
                 var passwordHash = PasswordUtils.HashPassword(user.Password, hash);
@@ -40,18 +42,18 @@ namespace simple_todo_bll.Auth
                 await unitOfWork.Save();
                 var result = AuthMappers.ToUserDto(newUser);
                 result.Token = TokenUtils.GenerateToken(result, _config);
-                return result;
+                return new OkObjectResult(result);
             }
         }
 
-        public async Task<UserDto> Login(LoginUserDto user)
+        public async Task<IActionResult> Login(LoginUserDto user)
         {
             using (var unitOfWork = new UnitOfWork(_context))
             {
                 var userExists = await unitOfWork.UserRepository.Get(u => u.Email == user.Email);
                 if (userExists.Count == 0)
                 {
-                    throw new Exception("User not found");
+                    return ResponseHelper.NotFound("User not found");
                 }
                 var userEntity = userExists[0];
                 if (!PasswordUtils.VerifyPassword(
@@ -59,11 +61,11 @@ namespace simple_todo_bll.Auth
                     userEntity.PasswordHash,
                     PasswordUtils.ConvertStringToSalt(userEntity.Salt)))
                 {
-                    throw new Exception("Invalid password");
+                    return ResponseHelper.Unauthorized("Invalid password");
                 }
                 var result = AuthMappers.ToUserDto(userEntity);
                 result.Token = TokenUtils.GenerateToken(result, _config);
-                return result;
+                return ResponseHelper.Ok(result);
             }
         }
     }
