@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using simple_todo_bll.Todo;
 using simple_todo_bll.Todo.DTOs;
-using simple_todo_database.Entities;
 
 namespace simple_todo_api.Controllers;
 
@@ -22,51 +21,23 @@ public class TodoController : ControllerBase
     }
 
     [HttpGet()]
-    public async Task<ActionResult<List<Todo>>> GetAll()
-    {
+    public async Task<ActionResult<List<TodoDto>>> GetAll() => await _todoBLL.GetTodos();
 
-        var todos = await _todoBLL.GetTodos();
-        return Ok(todos);
-    }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<Todo>> GetById(string id)
-    {
-
-        var todo = await _todoBLL.GetTodoById(id);
-        if (todo == null)
-        {
-            return NotFound();
-        }
-        return Ok(todo);
-    }
+    public async Task<ActionResult<TodoDto>> GetById(string id) => await _todoBLL.GetTodoById(id);
 
 
     [HttpPost()]
-    public async Task<ActionResult<Todo>> CreateTodo([FromBody] CreateTodoDto newTodo)
-    {
-
-        var todo = await _todoBLL.CreateTodo(newTodo);
-        return Ok(todo);
-    }
+    public async Task<ActionResult<TodoDto>> CreateTodo([FromBody] CreateTodoDto newTodo)
+        => await _todoBLL.CreateTodo(newTodo);
 
     [HttpPut("{id}")]
-    public async Task<ActionResult<Todo>> UpdateTodo(string id, [FromBody] UpdateTodoDto updatedTodo)
-    {
-
-        var todo = await _todoBLL.UpdateTodoById(id, updatedTodo);
-        return Ok(todo);
-    }
+    public async Task<ActionResult<TodoDto>> UpdateTodo(string id, [FromBody] UpdateTodoDto updatedTodo)
+        => await _todoBLL.UpdateTodoById(id, updatedTodo);
 
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteById(string id)
-    {
+        => await _todoBLL.DeleteTodoById(id);
 
-        var result = await _todoBLL.DeleteTodoById(id);
-        if (!result)
-        {
-            return NotFound();
-        }
-        return NoContent();
-    }
 }

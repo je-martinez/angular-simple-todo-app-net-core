@@ -5,6 +5,8 @@ using simple_todo_database.Context;
 using Microsoft.AspNetCore.Http;
 using simple_todo_bll.Auth.DTOs;
 using simple_todo_bll.Auth.Utils;
+using Microsoft.AspNetCore.Mvc;
+using simple_todo_bll.Shared.Utils;
 
 namespace simple_todo_bll.Todo
 {
@@ -22,27 +24,32 @@ namespace simple_todo_bll.Todo
             loggedUser = UserUtils.ExtractUserFromRequest(_httpContextAccessor.HttpContext.User);
         }
 
-        public async Task<List<TodoDto>> GetTodos()
+        public async Task<ActionResult<List<TodoDto>>> GetTodos()
         {
 
             using (var unitOfWork = new UnitOfWork(_context))
             {
                 var todos = await unitOfWork.TodoRepository.Get();
-                return todos.Select(todo => TodoMappers.ToTodoDto(todo)).ToList();
+                var allTodos = todos.Select(TodoMappers.ToTodoDto).ToList();
+                return ResponseHelper.Ok(allTodos);
             }
 
         }
 
-        public async Task<TodoDto> GetTodoById(string id)
+        public async Task<ActionResult<TodoDto>> GetTodoById(string id)
         {
             using (var unitOfWork = new UnitOfWork(_context))
             {
                 var todo = await unitOfWork.TodoRepository.GetByID(id);
-                return TodoMappers.ToTodoDto(todo);
+                if (todo == null)
+                {
+                    return ResponseHelper.NotFound();
+                }
+                return ResponseHelper.Ok(TodoMappers.ToTodoDto(todo));
             }
         }
 
-        public async Task<TodoDto> CreateTodo(CreateTodoDto todo)
+        public async Task<ActionResult<TodoDto>> CreateTodo(CreateTodoDto todo)
         {
             using (var unitOfWork = new UnitOfWork(_context))
             {
@@ -51,18 +58,18 @@ namespace simple_todo_bll.Todo
                 newEntity.CreatedBy = loggedUser.Email;
                 var newTodo = await unitOfWork.TodoRepository.Insert(newEntity);
                 await unitOfWork.Save();
-                return TodoMappers.ToTodoDto(newTodo);
+                return ResponseHelper.Created(string.Empty, TodoMappers.ToTodoDto(newTodo));
             }
         }
 
-        public async Task<TodoDto> UpdateTodoById(string id, UpdateTodoDto todo)
+        public async Task<ActionResult<TodoDto>> UpdateTodoById(string id, UpdateTodoDto todo)
         {
             using (var unitOfWork = new UnitOfWork(_context))
             {
                 var entityToUpdate = await unitOfWork.TodoRepository.GetByID(id);
                 if (entityToUpdate == null)
                 {
-                    return null;
+                    return ResponseHelper.NotFound();
                 }
                 entityToUpdate.Name = todo.Name;
                 entityToUpdate.Description = todo.Description;
@@ -75,11 +82,11 @@ namespace simple_todo_bll.Todo
                 entityToUpdate.UpdatedBy = loggedUser.Email;
                 unitOfWork.TodoRepository.Update(entityToUpdate);
                 await unitOfWork.Save();
-                return TodoMappers.ToTodoDto(entityToUpdate);
+                return ResponseHelper.Ok(TodoMappers.ToTodoDto(entityToUpdate));
             }
         }
 
-        public async Task<bool> DeleteTodoById(string id)
+        public async Task<ActionResult> DeleteTodoById(string id)
         {
             using (var unitOfWork = new UnitOfWork(_context))
             {
@@ -87,11 +94,11 @@ namespace simple_todo_bll.Todo
                 var entityToDelete = await unitOfWork.TodoRepository.GetByID(id);
                 if (entityToDelete == null)
                 {
-                    return false;
+                    return ResponseHelper.NotFound();
                 }
                 unitOfWork.TodoRepository.Delete(entityToDelete);
                 await unitOfWork.Save();
-                return true;
+                return ResponseHelper.NoContent();
             }
         }
     }

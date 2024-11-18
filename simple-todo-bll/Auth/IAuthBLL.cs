@@ -5,7 +5,7 @@ namespace simple_todo_bll.Auth
 {
     public interface IAuthBLL
     {
-        public Task<IActionResult> CreateUser(CreateUserDto user);
-        public Task<IActionResult> Login(LoginUserDto user);
+        public Task<ActionResult<UserDto>> CreateUser(CreateUserDto user);
+        public Task<ActionResult<UserDto>> Login(LoginUserDto user);
     }
 }

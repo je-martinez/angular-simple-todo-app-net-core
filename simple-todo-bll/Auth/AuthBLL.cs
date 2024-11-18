@@ -20,7 +20,7 @@ namespace simple_todo_bll.Auth
             _config = config;
         }
 
-        public async Task<IActionResult> CreateUser(CreateUserDto user)
+        public async Task<ActionResult<UserDto>> CreateUser(CreateUserDto user)
         {
             using (var unitOfWork = new UnitOfWork(_context))
             {
@@ -42,11 +42,11 @@ namespace simple_todo_bll.Auth
                 await unitOfWork.Save();
                 var result = AuthMappers.ToUserDto(newUser);
                 result.Token = TokenUtils.GenerateToken(result, _config);
-                return new OkObjectResult(result);
+                return ResponseHelper.Created(string.Empty, result);
             }
         }
 
-        public async Task<IActionResult> Login(LoginUserDto user)
+        public async Task<ActionResult<UserDto>> Login(LoginUserDto user)
         {
             using (var unitOfWork = new UnitOfWork(_context))
             {

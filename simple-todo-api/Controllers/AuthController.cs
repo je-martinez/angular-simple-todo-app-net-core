@@ -19,11 +19,11 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("register")]
-    public async Task<IActionResult> Register([FromBody] CreateUserDto user)
+    public async Task<ActionResult<UserDto>> Register([FromBody] CreateUserDto user)
         => await _authBLL.CreateUser(user);
 
     [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] LoginUserDto user)
+    public async Task<ActionResult<UserDto>> Login([FromBody] LoginUserDto user)
         => await _authBLL.Login(user);
 
 }
