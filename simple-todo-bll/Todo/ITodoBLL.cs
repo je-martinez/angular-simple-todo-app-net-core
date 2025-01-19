@@ -5,7 +5,7 @@ namespace simple_todo_bll.Todo
 {
     public interface ITodoBLL
     {
-        public Task<ActionResult<List<TodoDto>>> GetTodos();
+        public Task<ActionResult<List<TodoDto>>> GetMyTodos();
         public Task<ActionResult<TodoDto>> GetTodoById(string id);
         public Task<ActionResult<TodoDto>> CreateTodo(CreateTodoDto todo);
         public Task<ActionResult<TodoDto>> UpdateTodoById(string id, UpdateTodoDto todo);

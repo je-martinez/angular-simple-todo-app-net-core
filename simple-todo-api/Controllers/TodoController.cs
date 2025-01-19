@@ -20,13 +20,11 @@ public class TodoController : ControllerBase
         _todoBLL = todoBLL;
     }
 
-    [HttpGet()]
-    public async Task<ActionResult<List<TodoDto>>> GetAll() => await _todoBLL.GetTodos();
-
+    [HttpGet("my-todos")]
+    public async Task<ActionResult<List<TodoDto>>> GetAll() => await _todoBLL.GetMyTodos();
 
     [HttpGet("{id}")]
     public async Task<ActionResult<TodoDto>> GetById(string id) => await _todoBLL.GetTodoById(id);
-
 
     [HttpPost()]
     public async Task<ActionResult<TodoDto>> CreateTodo([FromBody] CreateTodoDto newTodo)

@@ -16,5 +16,6 @@ namespace simple_todo_database.Entities
         public string PasswordHash { get; set; }
         [DefaultValue(true)]
         public bool Status { get; set; } = true;
+        public virtual ICollection<Todo> Todos { get; set; }
     }
 }

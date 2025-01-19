@@ -20,5 +20,7 @@ namespace simple_todo_database.Entities
         public string? DeletedBy { get; set; }
         [DefaultValue(true)]
         public bool Status { get; set; } = true;
+        public string UserId { get; set; }
+        public virtual User User { get; set; }
     }
 }

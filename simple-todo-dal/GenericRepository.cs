@@ -44,6 +44,27 @@ namespace simple_todo_dal
             }
         }
 
+        public virtual Task<TEntity?> GetBy(
+            Expression<Func<TEntity, bool>> filter = null,
+            string includeProperties = ""
+        )
+        {
+            IQueryable<TEntity> query = _dbSet;
+
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+
+            foreach (var includeProperty in includeProperties.Split
+                (new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                query = query.Include(includeProperty);
+            }
+
+            return query.FirstOrDefaultAsync();
+        }
+
         public virtual async Task<TEntity?> GetByID(object id, string includeProperties = "")
         {
             return await _dbSet.FindAsync(id);

@@ -24,12 +24,12 @@ namespace simple_todo_bll.Todo
             loggedUser = UserUtils.ExtractUserFromRequest(_httpContextAccessor.HttpContext.User);
         }
 
-        public async Task<ActionResult<List<TodoDto>>> GetTodos()
+        public async Task<ActionResult<List<TodoDto>>> GetMyTodos()
         {
 
             using (var unitOfWork = new UnitOfWork(_context))
             {
-                var todos = await unitOfWork.TodoRepository.Get();
+                var todos = await unitOfWork.TodoRepository.Get(todo => todo.UserId == loggedUser.Id);
                 var allTodos = todos.Select(TodoMappers.ToTodoDto).ToList();
                 return ResponseHelper.Ok(allTodos);
             }
@@ -40,7 +40,8 @@ namespace simple_todo_bll.Todo
         {
             using (var unitOfWork = new UnitOfWork(_context))
             {
-                var todo = await unitOfWork.TodoRepository.GetByID(id);
+                var todo = await unitOfWork.TodoRepository.GetBy(
+                    todo => todo.Id == id && todo.UserId == loggedUser.Id);
                 if (todo == null)
                 {
                     return ResponseHelper.NotFound();
@@ -56,6 +57,7 @@ namespace simple_todo_bll.Todo
                 var newEntity = TodoMappers.ToTodoEntity(todo);
                 newEntity.CreatedAt = DateTime.Now.ToUniversalTime();
                 newEntity.CreatedBy = loggedUser.Email;
+                newEntity.UserId = loggedUser.Id;
                 var newTodo = await unitOfWork.TodoRepository.Insert(newEntity);
                 await unitOfWork.Save();
                 return ResponseHelper.Created(string.Empty, TodoMappers.ToTodoDto(newTodo));
@@ -66,7 +68,8 @@ namespace simple_todo_bll.Todo
         {
             using (var unitOfWork = new UnitOfWork(_context))
             {
-                var entityToUpdate = await unitOfWork.TodoRepository.GetByID(id);
+                var entityToUpdate = await unitOfWork.TodoRepository.GetBy(
+                    todo => todo.Id == id && todo.UserId == loggedUser.Id);
                 if (entityToUpdate == null)
                 {
                     return ResponseHelper.NotFound();
@@ -101,5 +104,6 @@ namespace simple_todo_bll.Todo
                 return ResponseHelper.NoContent();
             }
         }
+
     }
 }
