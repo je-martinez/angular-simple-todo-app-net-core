@@ -25,15 +25,18 @@ builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddMvc();
 
+builder.Services.AddScoped<IJwtUtils, JwtUtils>(provider =>
+    new JwtUtils(provider.GetRequiredService<ApiDbContext>(),
+    new JwtConfigDto
+    {
+        Secret = builder.Configuration["Jwt:Key"] ?? string.Empty,
+        Issuer = builder.Configuration["Jwt:Issuer"] ?? string.Empty
+    })
+);
+
 builder.Services.AddScoped<ITodoBLL, TodoBLL>();
 
-builder.Services.AddScoped<IAuthBLL, AuthBLL>(provider =>
-new AuthBLL(provider.GetRequiredService<ApiDbContext>(),
-new JwtConfigDto
-{
-    Secret = builder.Configuration["Jwt:Key"] ?? string.Empty,
-    Issuer = builder.Configuration["Jwt:Issuer"] ?? string.Empty
-}));
+builder.Services.AddScoped<IAuthBLL, AuthBLL>();
 
 
 builder.Services.AddRouting(options => options.LowercaseUrls = true);

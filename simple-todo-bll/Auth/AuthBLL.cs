@@ -13,11 +13,11 @@ namespace simple_todo_bll.Auth
     {
 
         private readonly ApiDbContext _context;
-        private readonly JwtConfigDto _config;
-        public AuthBLL(ApiDbContext context, JwtConfigDto config)
+        private readonly IJwtUtils _utils;
+        public AuthBLL(ApiDbContext context, IJwtUtils utils)
         {
             _context = context;
-            _config = config;
+            _utils = utils;
         }
 
         public async Task<ActionResult<UserDto>> CreateUser(CreateUserDto user)
@@ -41,7 +41,7 @@ namespace simple_todo_bll.Auth
                 });
                 await unitOfWork.Save();
                 var result = AuthMappers.ToUserDto(newUser);
-                result.Token = TokenUtils.GenerateToken(result, _config);
+                result.Token = _utils.GenerateToken(result);
                 return ResponseHelper.Created(string.Empty, result);
             }
         }
@@ -64,7 +64,7 @@ namespace simple_todo_bll.Auth
                     return ResponseHelper.Unauthorized("Invalid password");
                 }
                 var result = AuthMappers.ToUserDto(userEntity);
-                result.Token = TokenUtils.GenerateToken(result, _config);
+                result.Token = _utils.GenerateToken(result);
                 return ResponseHelper.Ok(result);
             }
         }
