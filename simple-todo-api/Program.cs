@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using simple_todo_api.Middlewares;
 using simple_todo_bll.Auth;
 using simple_todo_bll.Auth.DTOs;
 using simple_todo_bll.Todo;
@@ -106,6 +107,8 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseMiddleware<ErrorMiddleware>();
 
 app.MapControllers();
 
